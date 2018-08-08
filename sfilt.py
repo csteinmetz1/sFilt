@@ -6,8 +6,10 @@ import spotipy
 import spotipy.util as util
 import pandas as pd
 from collections import OrderedDict
+from datetime import datetime
+import calendar
 
-class sfiltt():
+class sfilt():
     def __init__(self, limit, token):
         if token:
             self.sp = spotipy.Spotify(auth=token)
@@ -96,6 +98,12 @@ class sfiltt():
 
         return sorted_track_ids   
 
+    def generate_playlist_name():
+        t = datetime.today()
+        playlist_title = 'sfilt: Top 50 Viral {} {} {}'.format(calendar.month_name[t.month], t.day, t.year)
+        
+        return playlist_title
+
     def order_tracks_by_popularity(self, track_ids):
         popularity_list = []
         track_id_list = []
@@ -123,12 +131,14 @@ scope = 'playlist-modify-public user-top-read'
 token = util.prompt_for_user_token(username, scope, client_id=keys['client_id'], 
                                     client_secret=keys['client_secret'], redirect_uri=keys['redirect_uri'])
 
-sfilt = sfilt(500, token)
-viral_50 = json.load(open('viral_50.json'))
-viral_50_tracks = sfilt.get_viral_tracks(viral_50.values())
-viral_50_global = sfilt.get_viral_tracks(['37i9dQZEVXbKuaTI1Z1Afx', '37i9dQZEVXbMDoHDwVN2tF'])
-viral_50_unique = sfilt.filter_tracks(viral_50_tracks, viral_50_global)
-viral_50_unique_sorted = sfilt.order_tracks_by_features(viral_50_unique)
-sfilt.add_tracks_to_playlist('sfilt: Top 50 Viral', viral_50_unique_sorted)
+if __name__ == '__main__':
+    sfilt = sfilt(500, token)
+    viral_50 = json.load(open('viral_50.json'))
+    viral_50_tracks = sfilt.get_viral_tracks(viral_50.values())
+    viral_50_global = sfilt.get_viral_tracks(['37i9dQZEVXbKuaTI1Z1Afx', '37i9dQZEVXbMDoHDwVN2tF'])
+    viral_50_unique = sfilt.filter_tracks(viral_50_tracks, viral_50_global)
+    viral_50_unique_sorted = sfilt.order_tracks_by_features(viral_50_unique)
+    playlist_name = generate_playlist_name()
+    sfilt.add_tracks_to_playlist(playlist_name, viral_50_unique_sorted)
 
 
