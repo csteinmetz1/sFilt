@@ -28,6 +28,7 @@ class sfilt():
             viral_tracks_ids += [track['track']['id'] for track in tracks['items'] if track['track']['popularity'] < 100]
             sys.stdout.write("Found {0: >3d} viral tracks.\r".format(len(viral_tracks_ids)))
             sys.stdout.flush()
+        print()
         return viral_tracks_ids
 
     def filter_tracks(self, input_tracks, stop_tracks):
@@ -81,7 +82,7 @@ class sfilt():
                     track_id_list.append(af['id'])
                     track_name_list.append(to['name'])
                     track_artist_list.append(to['album']['artists'][0]['name'])
-        
+        print()
         # pick track at random to start the list
         start_idx = np.random.randint(0, len(feature_vectors))
 
@@ -98,7 +99,7 @@ class sfilt():
 
         return sorted_track_ids   
 
-    def generate_playlist_name():
+    def generate_playlist_name(self):
         t = datetime.today()
         playlist_title = 'sfilt: Top 50 Viral {} {} {}'.format(calendar.month_name[t.month], t.day, t.year)
         
@@ -138,7 +139,7 @@ if __name__ == '__main__':
     viral_50_global = sfilt.get_viral_tracks(['37i9dQZEVXbKuaTI1Z1Afx', '37i9dQZEVXbMDoHDwVN2tF'])
     viral_50_unique = sfilt.filter_tracks(viral_50_tracks, viral_50_global)
     viral_50_unique_sorted = sfilt.order_tracks_by_features(viral_50_unique)
-    playlist_name = generate_playlist_name()
+    playlist_name = sfilt.generate_playlist_name()
     sfilt.add_tracks_to_playlist(playlist_name, viral_50_unique_sorted)
 
 
