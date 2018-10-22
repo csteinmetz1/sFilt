@@ -28,7 +28,6 @@ class sfilt():
             viral_tracks_ids += [track['track']['id'] for track in tracks['items'] if track['track']['popularity'] < 100]
             sys.stdout.write("Found {0: >3d} viral tracks.\r".format(len(viral_tracks_ids)))
             sys.stdout.flush()
-        print()
         return viral_tracks_ids
 
     def filter_tracks(self, input_tracks, stop_tracks):
@@ -65,7 +64,7 @@ class sfilt():
         track_name_list = []
         n_af_tracks = 0
 
-        for idx in range(floor(len(track_ids)/50)):
+        for idx in range(int(floor(len(track_ids)/50))):
             track_ids_set = track_ids[idx*50:idx*50+50]
             track_audio_features = self.sp.audio_features(track_ids_set)
             track_objects = self.sp.tracks(track_ids_set)['tracks']
@@ -133,7 +132,7 @@ token = util.prompt_for_user_token(username, scope, client_id=keys['client_id'],
                                     client_secret=keys['client_secret'], redirect_uri=keys['redirect_uri'])
 
 if __name__ == '__main__':
-    sfilt = sfilt(500, token)
+    sfilt = sfilt(500, token) # this is a test
     viral_50 = json.load(open('viral_50.json'))
     viral_50_tracks = sfilt.get_viral_tracks(viral_50.values())
     viral_50_global = sfilt.get_viral_tracks(['37i9dQZEVXbKuaTI1Z1Afx', '37i9dQZEVXbMDoHDwVN2tF'])
